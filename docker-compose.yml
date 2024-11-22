@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  django:
+    build: ./backend
+    container_name: ${DJANGO_HOST}
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - ./frontend:/frontend
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - app
+    restart: always
+
+  nginx:
+    build: ./nginx
+    container_name: ${NGINX_HOST}
+    env_file:
+      - .env
+    ports:
+      - "${NGINX_EXPOSE}:${NGINX_EXPOSE}"
+    depends_on:
+      - django
+    volumes:
+      - ./frontend:/frontend
+    networks:
+      - app
+    restart: always
+
+  postgres:
+    image: postgres:13
+    container_name: ${POSTGRES_HOST}
+    env_file:
+      - .env
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - app
+    restart: always
+
+  redis:
+    image: redis:6
+    container_name: ${REDIS_HOST}
+    networks:
+      - app
+    restart: always
+
+networks:
+  app:
+    driver: bridge

@@ -1,0 +1,24 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MVPee SPA</title>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href="/home" onclick="showPage('/home')">Home</a></li>
+                <li><a href="/about" onclick="showPage('/about')">About</a></li>
+                <li><a href="/contact" onclick="showPage('/contact')">Contact</a></li>
+            </ul>
+        </nav>
+
+        <div id="content"></div>
+
+    </body>
+    <script src="{% static 'js/router.js' %}"></script>
+</html>
