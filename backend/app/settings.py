@@ -29,6 +29,10 @@ ALLOWED_HOSTS = [
     os.getenv('SERVER_NAME', 'localhost')
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "https://42.mvpee.be:444",
+]
+
 # Application definition
 
 INSTALLED_APPS = [

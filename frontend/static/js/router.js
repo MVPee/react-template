@@ -4,7 +4,7 @@ function showPage(view) {
     xhr.open("GET", `/api/views${view}/`, true);
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
+            if (xhr.status != 404) {
                 document.getElementById('content').innerHTML = JSON.parse(xhr.responseText).html;
                 loadScripts();
             }
@@ -23,7 +23,7 @@ window.onpopstate = function (event) {
         xhr.open("GET", `/api/views${path}/`, true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
+                if (xhr.status != 404) {
                     document.getElementById('content').innerHTML = JSON.parse(xhr.responseText).html;
                     loadScripts();
                 }

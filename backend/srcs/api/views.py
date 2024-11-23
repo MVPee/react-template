@@ -5,6 +5,27 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
+import os
+
+API_KEY = os.getenv('API_KEY')
+
+"""
+    How to use the API_KEY for somes privates API (micro service)
+
+    #*      import requests
+
+    #*      API_KEY = os.getenv('API_KEY')
+    #*      response = requests.get(API_URL, headers={"X-API-Key": API_KEY})
+"""
+
+"""
+    #*      @api_view(['GET'])
+    #*      def get_...(request):
+    #*      if request.headers.get('X-API-Key') != API_KEY:
+    #*          return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
+    #*      else
+    #*          ...
+"""
 
 @api_view(['GET'])
 def get_user(request, pk):
@@ -34,19 +55,56 @@ def add_user(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class View():
+class View(APIView):
 
-    @api_view(['GET'])
-    def home(request):
-        content = render(request, 'home.html', context={}).content.decode("utf-8")
-        return Response({"html": content}, status=status.HTTP_200_OK)
+    content = None
+    status = status.HTTP_200_OK
+    auth_required = False
 
-    @api_view(['GET'])
-    def about(request):
-        content = render(request, 'about.html', context={}).content.decode("utf-8")
-        return Response({"html": content}, status=status.HTTP_200_OK)
+    def get(self, request):
+        if self.auth_required and not request.user.is_authenticated:
+            self.status = status.HTTP_403_FORBIDDEN
+            self.content = render(
+                request, 'home.html',
+                context={"error_message": "You need to be authenticated to have access to this page"}
+            ).content.decode("utf-8")
+        return Response({"html": self.content}, self.status)
 
-    @api_view(['GET'])
-    def contact(request):
-        content = render(request, 'contact.html', context={}).content.decode("utf-8")
-        return Response({"html": content}, status=status.HTTP_200_OK)
+
+class home(View):
+
+    auth_required = False
+
+    def get(self, request):
+        self.content = render(
+            request,
+            'home.html',
+            context={}
+        ).content.decode("utf-8")
+        return super().get(request)    
+
+
+class about(View):
+
+    auth_required = False
+
+    def get(self, request):
+        self.content = render(
+            request,
+            'about.html',
+            context={}
+        ).content.decode("utf-8")
+        return super().get(request)
+
+
+class contact(View):
+
+    auth_required = True
+
+    def get(self, request):
+        self.content = render(
+            request,
+            'contact.html',
+            context={}
+        ).content.decode("utf-8")
+        return super().get(request)
