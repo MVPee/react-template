@@ -55,6 +55,9 @@ def add_user(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
 class View(APIView):
 
     content = None
@@ -64,10 +67,7 @@ class View(APIView):
     def get(self, request):
         if self.auth_required and not request.user.is_authenticated:
             self.status = status.HTTP_403_FORBIDDEN
-            self.content = render(
-                request, 'home.html',
-                context={"error_message": "You need to be authenticated to have access to this page"}
-            ).content.decode("utf-8")
+            self.content = "<h1>You can pass there.</h1>"
         return Response({"html": self.content}, self.status)
 
 
@@ -76,11 +76,7 @@ class home(View):
     auth_required = False
 
     def get(self, request):
-        self.content = render(
-            request,
-            'home.html',
-            context={}
-        ).content.decode("utf-8")
+        self.content = "<h1>Home</h1>"
         return super().get(request)    
 
 
@@ -89,11 +85,7 @@ class about(View):
     auth_required = False
 
     def get(self, request):
-        self.content = render(
-            request,
-            'about.html',
-            context={}
-        ).content.decode("utf-8")
+        self.content = "<h1>About</h1>"
         return super().get(request)
 
 
@@ -102,9 +94,5 @@ class contact(View):
     auth_required = True
 
     def get(self, request):
-        self.content = render(
-            request,
-            'contact.html',
-            context={}
-        ).content.decode("utf-8")
+        self.content = "<h1>Contact</h1>"
         return super().get(request)

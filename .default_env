@@ -2,6 +2,7 @@
 APP_NAME='template'
 
 # Host
+REACT_HOST="react_${APP_NAME}"
 DJANGO_HOST="django_${APP_NAME}"
 NGINX_HOST="nginx_${APP_NAME}"
 POSTGRES_HOST="postgres_${APP_NAME}"

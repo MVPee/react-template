@@ -25,12 +25,15 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
+SERVER_NAME = os.getenv('SERVER_NAME', 'localhost')
+PORT = os.getenv('NGINX_EXPOSE', '443')
+
 ALLOWED_HOSTS = [
-    os.getenv('SERVER_NAME', 'localhost')
+    SERVER_NAME
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://42.mvpee.be:444",
+    f"https://{SERVER_NAME}:{PORT}",
 ]
 
 # Application definition
@@ -43,8 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'srcs.api',
-    'srcs.user',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -137,9 +139,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    "/frontend/static",
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
