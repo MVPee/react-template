@@ -9,23 +9,6 @@ import os
 
 API_KEY = os.getenv('API_KEY')
 
-"""
-    How to use the API_KEY for somes privates API (micro service)
-
-    #*      import requests
-
-    #*      API_KEY = os.getenv('API_KEY')
-    #*      response = requests.get(API_URL, headers={"X-API-Key": API_KEY})
-"""
-
-"""
-    #*      @api_view(['GET'])
-    #*      def get_...(request):
-    #*      if request.headers.get('X-API-Key') != API_KEY:
-    #*          return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
-    #*      else
-    #*          ...
-"""
 
 @api_view(['GET'])
 def get_user(request, pk):
@@ -76,7 +59,7 @@ class home(View):
     auth_required = False
 
     def get(self, request):
-        self.content = "<h1>Home</h1>"
+        self.content = render(request, 'test.html', {}).content.decode("utf-8")
         return super().get(request)    
 
 
