@@ -59,7 +59,7 @@ class home(View):
     auth_required = False
 
     def get(self, request):
-        self.content = render(request, 'test.html', {}).content.decode("utf-8")
+        self.content = render(request, 'test.html', {"contexte": "test.html"}).content.decode("utf-8")
         return super().get(request)    
 
 
