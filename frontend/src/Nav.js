@@ -1,20 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function Nav() {
-  const [content, setContent] = useState("<h1>Home</h1>");
+  const [content, setContent] = useState("<h1>loading</h1>");
 
   const navigateTo = (page) => {
+    window.history.pushState({ page }, "", `/${page}`);
+    fetchContent(page);
+  };
+
+  const fetchContent = (page) => {
     fetch(`/api/views/${page}/`)
       .then((response) => {
-        if (!response.ok)
-          throw new Error(`${response.status}`);
+        if (!response.ok) throw new Error(`${response.status}`);
         return response.json();
       })
-      .then((data) => { setContent(data.html); })
+      .then((data) => {
+        setContent(data.html);
+      })
       .catch((err) => {
-        setContent(err);
+        setContent(`<p>Error: ${err.message}</p>`);
       });
   };
+
+  useEffect(() => {
+    const initialPage = window.location.pathname.replace("/", "") || "home";
+    fetchContent(initialPage);
+    
+    const handlePopState = (event) => {
+      fetchContent(event.state?.page || "home");
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   return (
     <div>
@@ -32,7 +53,7 @@ function Nav() {
         </ul>
       </nav>
       <div id="content">
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+        <div dangerouslySetInnerHTML={{ __html: content }} />
       </div>
     </div>
   );
